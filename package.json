@@ -8,14 +8,17 @@
   "types": "dist/index.d.ts",
   "files": [
     "dist",
-    "Icons"
+    "Icons",
+    "examples",
+    "scripts"
   ],
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
     "generate-icons": "node scripts/generate-icons.js",
     "generate-pages": "node scripts/generate-icon-pages.js",
-    "prepublishOnly": "npm run generate-icons && npm run build"
+    "prepublishOnly": "npm run generate-icons && npm run build",
+    "open-examples": "node scripts/open-examples.js"
   },
   "keywords": [
     "react",

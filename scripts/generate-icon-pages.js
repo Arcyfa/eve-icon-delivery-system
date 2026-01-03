@@ -87,7 +87,7 @@ ${images.map(img => `			<div class="icon-card">
 `;
   }
 
-  return `<!DOCTYPE html>
+	return `<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -215,14 +215,65 @@ ${sectionsHTML}
 </html>`;
 }
 
+// Ensure output directory exists
+const outputDir = path.join(__dirname, '..', 'examples');
+fs.mkdirSync(outputDir, { recursive: true });
+
+// Copy color-adjuster.html into examples/ if it exists
+const colorAdjusterSrc = path.join(__dirname, '..', 'color-adjuster.html');
+const colorAdjusterDest = path.join(outputDir, 'color-adjuster.html');
+try {
+	if (fs.existsSync(colorAdjusterSrc)) {
+		fs.copyFileSync(colorAdjusterSrc, colorAdjusterDest);
+		console.log('Copied color-adjuster.html into examples/');
+	}
+} catch (err) {
+	console.warn('Could not copy color-adjuster.html:', err.message);
+}
+// Post-process the copied color-adjuster to fix icon paths and add back button
+try {
+	if (fs.existsSync(colorAdjusterDest)) {
+		let ca = fs.readFileSync(colorAdjusterDest, 'utf8');
+		// Fix relative paths: change "Icons/..." to "../Icons/..."
+		ca = ca.replace(/Icons\//g, '../Icons/');
+		// Inject header markup (consistent with other generated pages)
+		const headerHtml = `\n\t\t<div class="header">\n\t\t\t<h1>Color Adjuster</h1>\n\t\t\t<a href="index.html" class="back-link">← Back to Index</a>\n\t\t</div>`;
+		ca = ca.replace('<div class="container">', '<div class="container">' + headerHtml);
+		// Inject header/back-link CSS into the <style> block if not present
+		if (!/\.header\s*\{/.test(ca)) {
+			const headerCss = `\n\t\t.header {\n\t\t\tdisplay: flex;\n\t\t\tjustify-content: space-between;\n\t\t\talign-items: center;\n\t\t\tmargin-bottom: 30px;\n\t\t\tborder-bottom: 2px solid #4a9eff;\n\t\t\tpadding-bottom: 15px;\n\t\t}\n\n\t\t.back-link {\n\t\t\tcolor: #4a9eff;\n\t\t\ttext-decoration: none;\n\t\t\tpadding: 8px 16px;\n\t\t\tbackground: #2a2a2a;\n\t\t\tborder-radius: 4px;\n\t\t\ttransition: background-color 0.2s;\n\t\t}\n\n\t\t.back-link:hover {\n\t\t\tbackground: #3a3a3a;\n\t\t}\n`;
+			ca = ca.replace('<style>', '<style>' + headerCss);
+		}
+		fs.writeFileSync(colorAdjusterDest, ca, 'utf8');
+		console.log('Patched examples/color-adjuster.html paths and added back button');
+	}
+} catch (err) {
+	console.warn('Could not post-process color-adjuster.html:', err.message);
+}
+
+// Copy index.html into examples/ and adjust links so they point locally
+const indexSrc = path.join(__dirname, '..', 'index.html');
+const indexDest = path.join(outputDir, 'index.html');
+try {
+	if (fs.existsSync(indexSrc)) {
+		let indexContent = fs.readFileSync(indexSrc, 'utf8');
+		// Remove examples/ prefix from links pointing to generated pages
+		indexContent = indexContent.replace(/href="examples\//g, 'href="');
+		fs.writeFileSync(indexDest, indexContent, 'utf8');
+		console.log('Copied adjusted index.html into examples/');
+	}
+} catch (err) {
+	console.warn('Could not copy index.html:', err.message);
+}
+
 // Generate all-icons.html
 console.log('Generating all-icons.html...');
-const allIcons = getAllPNGFiles(iconsDir).map(img => path.join('Icons', img).replace(/\\/g, '/'));
+const allIcons = getAllPNGFiles(iconsDir).map(img => path.join('..', 'Icons', img).replace(/\\/g, '/'));
 fs.writeFileSync(
-  path.join(__dirname, '..', 'all-icons.html'),
-  createHTMLPage('All Icons', allIcons)
+	path.join(outputDir, 'all-icons.html'),
+	createHTMLPage('All Icons', allIcons)
 );
-console.log(`Created all-icons.html with ${allIcons.length} icons`);
+console.log(`Created examples/all-icons.html with ${allIcons.length} icons`);
 
 // Get all main folders
 const mainFolders = getSubdirectories(iconsDir);
@@ -233,9 +284,9 @@ mainFolders.forEach(folder => {
   const subfoldersInThisFolder = getSubdirectories(folderPath);
   
   // Get images directly in this folder
-  const imagesInRoot = getPNGFilesInDir(folderPath).map(img => 
-    path.join('Icons', folder, img).replace(/\\/g, '/')
-  );
+	const imagesInRoot = getPNGFilesInDir(folderPath).map(img => 
+		path.join('..', 'Icons', folder, img).replace(/\\/g, '/')
+	);
   
   if (subfoldersInThisFolder.length > 0) {
     // If there are subfolders, create sections
@@ -249,9 +300,9 @@ mainFolders.forEach(folder => {
     // Add each subfolder as a section
     subfoldersInThisFolder.forEach(subfolder => {
       const subfolderPath = path.join(folderPath, subfolder);
-      const subfolderImages = getPNGFilesInDir(subfolderPath).map(img =>
-        path.join('Icons', folder, subfolder, img).replace(/\\/g, '/')
-      );
+			const subfolderImages = getPNGFilesInDir(subfolderPath).map(img =>
+				path.join('..', 'Icons', folder, subfolder, img).replace(/\\/g, '/')
+			);
       if (subfolderImages.length > 0) {
         folderStructure[subfolder] = subfolderImages;
       }
@@ -263,19 +314,19 @@ mainFolders.forEach(folder => {
     }
     
     const fileName = `icons-${folder.toLowerCase().replace(/([A-Z])/g, '-$1').replace(/^-/, '')}.html`;
-    fs.writeFileSync(
-      path.join(__dirname, '..', fileName),
-      createHTMLPage(formatFolderName(folder), allImagesInFolder, folderStructure)
-    );
-    console.log(`Created ${fileName} with ${allImagesInFolder.length} icons in ${Object.keys(folderStructure).length} section(s)`);
+		fs.writeFileSync(
+			path.join(outputDir, fileName),
+			createHTMLPage(formatFolderName(folder), allImagesInFolder, folderStructure)
+		);
+		console.log(`Created examples/${fileName} with ${allImagesInFolder.length} icons in ${Object.keys(folderStructure).length} section(s)`);
   } else {
     // No subfolders, just list all images
     const fileName = `icons-${folder.toLowerCase().replace(/([A-Z])/g, '-$1').replace(/^-/, '')}.html`;
-    fs.writeFileSync(
-      path.join(__dirname, '..', fileName),
-      createHTMLPage(formatFolderName(folder), imagesInRoot)
-    );
-    console.log(`Created ${fileName} with ${imagesInRoot.length} icons`);
+		fs.writeFileSync(
+			path.join(outputDir, fileName),
+			createHTMLPage(formatFolderName(folder), imagesInRoot)
+		);
+		console.log(`Created examples/${fileName} with ${imagesInRoot.length} icons`);
   }
 });
 

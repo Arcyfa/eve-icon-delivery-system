@@ -6,29 +6,32 @@ EVE Online icons for React with CSS filter support for color manipulation.
 
 Browse all available icons through the interactive HTML galleries:
 
-- **[index.html](index.html)** - Main index with links to all categories
-- **[all-icons.html](all-icons.html)** - View all 607 icons in one page
+-- **[index.html](index.html)** - Main index with links to all categories
+-- **[all-icons.html](examples/all-icons.html)** - View all 607 icons in one page
+-- **[color-adjuster.html](examples/color-adjuster.html)** - Color adjustment tool
 
 Or browse by category:
-- [Attributes](icons-attributes.html) - 5 icons
-- [Attributes Implants](icons-attributesimplants.html) - 5 icons  
-- [Attributes Large](icons-attributeslarge.html) - 5 icons
-- [Career Program](icons-careerprogram.html) - 4 icons
-- [Ice](icons-ice.html) - 8 icons
-- [ISIS](icons-isis.html) - 60 ship tree icons
-- [Logos](icons-logos.html) - 38 corporation/faction logos
-- [Minerals](icons-minerals.html) - 15 icons
-- [Mutaplasmid](icons-mutaplasmid.html) - 3 icons
-- [Ores](icons-ores.html) - 16 icons
-- [Overview](icons-overview.html) - 107 icons (with Brackets, Friendlies, Hostiles, Neutrals sections)
-- [Planetary Interaction](icons-planetaryinteraction.html) - 10 icons
-- [Planets](icons-planets.html) - 16 icons
-- [Scanner](icons-scanner.html) - 14 icons
-- [Timers](icons-timers.html) - 9 icons
-- [UI](icons-ui.html) - 148 user interface icons
-- [UI Skill](icons-uiskill.html) - 4 skill-related icons
+
+- [Attributes](examples/icons-attributes.html) - 5 icons
+- [Attributes Implants](examples/icons-attributesimplants.html) - 5 icons  
+- [Attributes Large](examples/icons-attributeslarge.html) - 5 icons
+- [Career Program](examples/icons-careerprogram.html) - 4 icons
+- [Ice](examples/icons-ice.html) - 8 icons
+- [ISIS](examples/icons-isis.html) - 60 ship tree icons
+- [Logos](examples/icons-logos.html) - 38 corporation/faction logos
+- [Minerals](examples/icons-minerals.html) - 15 icons
+- [Mutaplasmid](examples/icons-mutaplasmid.html) - 3 icons
+- [Ores](examples/icons-ores.html) - 16 icons
+- [Overview](examples/icons-overview.html) - 107 icons (with Brackets, Friendlies, Hostiles, Neutrals sections)
+- [Planetary Interaction](examples/icons-planetaryinteraction.html) - 10 icons
+- [Planets](examples/icons-planets.html) - 16 icons
+- [Scanner](examples/icons-scanner.html) - 14 icons
+- [Timers](examples/icons-timers.html) - 9 icons
+- [UI](examples/icons-ui.html) - 148 user interface icons
+- [UI Skill](examples/icons-uiskill.html) - 4 skill-related icons
 
 To regenerate the gallery pages after adding new icons:
+
 ```bash
 npm run generate-pages
 ```
