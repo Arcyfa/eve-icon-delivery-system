@@ -237,7 +237,7 @@ try {
 		// Fix relative paths: change "Icons/..." to "../Icons/..."
 		ca = ca.replace(/Icons\//g, '../Icons/');
 		// Inject header markup (consistent with other generated pages)
-		const headerHtml = `\n\t\t<div class="header">\n\t\t\t<h1>Color Adjuster</h1>\n\t\t\t<a href="index.html" class="back-link">← Back to Index</a>\n\t\t</div>`;
+		const headerHtml = `\n\t\t<div class="header">\n\t\t\t<h1>EVE Icon Color Adjustment with CSS Filters</h1>\n\t\t\t<a href="index.html" class="back-link">← Back to Index</a>\n\t\t</div>`;
 		ca = ca.replace('<div class="container">', '<div class="container">' + headerHtml);
 		// Inject header/back-link CSS into the <style> block if not present
 		if (!/\.header\s*\{/.test(ca)) {

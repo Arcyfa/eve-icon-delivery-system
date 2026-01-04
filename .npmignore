@@ -1,8 +1,0 @@
-src/
-.gitignore
-tsconfig.json
-rollup.config.js
-color-adjuster.html
-node_modules/
-.git/
-*.log
