@@ -101,7 +101,12 @@ export const Icon: React.FC<IconProps> = ({
     ...style,
     display: 'block',
     objectFit: 'contain',
+    flexShrink: 0, // Prevent flex containers from shrinking the icon below its specified size
   };
+
+  const styleHasMaxWidth = typeof style?.maxWidth !== 'undefined';
+  const styleHasMaxHeight = typeof style?.maxHeight !== 'undefined';
+
 
 
   // If only one of width/height is provided, ensure the other
@@ -155,19 +160,55 @@ export const Icon: React.FC<IconProps> = ({
   const imgWidthAttr = typeof size === 'number' ? (size + 4) : (typeof width === 'number' ? (width + 4) : undefined);
   const imgHeightAttr = typeof size === 'number' ? (size + 4) : (typeof height === 'number' ? (height + 4) : undefined);
 
+  // Build final inline style object. We need to apply width/height overrides
+  // from adjustedSize/adjustedWidth/adjustedHeight if provided.
+  const finalStyle: CSSProperties = {
+    ...computedStyle,
+  };
+
+  if (adjustedSize) {
+    finalStyle.width = adjustedSize;
+    finalStyle.height = adjustedSize;
+  } else {
+    if (adjustedWidth) finalStyle.width = adjustedWidth;
+    if (adjustedHeight) finalStyle.height = adjustedHeight;
+  }
+
+  // Set max dimensions to match requested width/height unless caller provided explicit values.
+  // Use the same adjusted values to ensure icons can grow to their specified size.
+  // Also set min dimensions to force the icon to be at least this big, allowing it to break out of parent containers.
+  if (!styleHasMaxWidth) {
+    if (adjustedSize) {
+      finalStyle.maxWidth = adjustedSize;
+      finalStyle.minWidth = adjustedSize;
+    } else if (adjustedWidth) {
+      finalStyle.maxWidth = adjustedWidth;
+      finalStyle.minWidth = adjustedWidth;
+    } else if (typeof finalStyle.width !== 'undefined') {
+      finalStyle.maxWidth = finalStyle.width as any;
+      finalStyle.minWidth = finalStyle.width as any;
+    }
+  }
+  if (!styleHasMaxHeight) {
+    if (adjustedSize) {
+      finalStyle.maxHeight = adjustedSize;
+      finalStyle.minHeight = adjustedSize;
+    } else if (adjustedHeight) {
+      finalStyle.maxHeight = adjustedHeight;
+      finalStyle.minHeight = adjustedHeight;
+    } else if (typeof finalStyle.height !== 'undefined') {
+      finalStyle.maxHeight = finalStyle.height as any;
+      finalStyle.minHeight = finalStyle.height as any;
+    }
+  }
+
   return (
     <img
       {...rest}
       src={src}
       alt={alt}
       className={className}
-      // Apply adjusted CSS dimensions (only when props provided)
-      style={{
-        ...computedStyle,
-        ...(adjustedSize ? { width: adjustedSize, height: adjustedSize } : {}),
-        ...(adjustedWidth ? { width: adjustedWidth } : {}),
-        ...(adjustedHeight ? { height: adjustedHeight } : {}),
-      }}
+      style={finalStyle}
       width={imgWidthAttr}
       height={imgHeightAttr}
     />

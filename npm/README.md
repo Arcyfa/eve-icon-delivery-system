@@ -50,6 +50,20 @@ function Example() {
 - These accept a number (interpreted as pixels) or a CSS string (for example `'2rem'` or `'24px'`).
 - Numeric values are written as HTML `width`/`height` attributes and the library applies a small padding adjustment to avoid cropping (an extra ~4px is added to the computed pixel value).
 
+#### Size enforcement with `flexShrink: 0`
+
+Icons use `flexShrink: 0` in their inline styles to force images to respect the specified `width` and `height` settings, even when placed inside flex containers. This ensures icons maintain their size regardless of parent layout constraints (similar to how SVG icons behave).
+
+If you need to override this behavior and allow flex containers to shrink the icons, add `!important` to your CSS:
+
+```css
+.my-shrinkable-icon {
+  flex-shrink: 1 !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+}
+```
+
 ## Icon Gallery
 
 Browse all available icons through the interactive HTML galleries included in `examples/`:

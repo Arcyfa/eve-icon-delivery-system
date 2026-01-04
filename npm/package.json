@@ -1,6 +1,6 @@
 {
   "name": "eve-icons-react",
-  "version": "0.1.11",
+  "version": "0.1.14",
   "description": "EVE Online icons for React with CSS filter support",
   "type": "module",
   "main": "dist/index.js",
